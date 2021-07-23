@@ -1,0 +1,6 @@
+[submodule "notebooks/data_generator"]
+	path = notebooks/data_generator
+	url = git@github.com:pierluigiferrari/data_generator_object_detection_2d.git
+[submodule "notebooks/ssd_keras"]
+	path = notebooks/ssd_keras
+	url = git@github.com:pierluigiferrari/ssd_keras.git
