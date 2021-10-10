@@ -1,13 +1,20 @@
 from .io_utils import read_annotations, save_annotations
+import warnings
 import glob
 import os.path as path
 import numpy as np
+import pandas as pd
 
 
 class AnnotationFormat:
     """
     Class containing useful data for accessing and manipulating annotations.
+
+    I've tried to extract as many "magic constants" out of the actual methods as
+    possible so that they can be grouped here and changed easily in the future.
     """
+
+    # Column Names
     LEFT_COL = "Begin Time (s)"
     RIGHT_COL = "End Time (s)"
     TOP_COL = "High Freq (Hz)"
@@ -16,7 +23,42 @@ class AnnotationFormat:
     CLASS_CONF_COL = "Species Confidence"
     CALL_UNCERTAINTY_COL = "Call Uncertainty"
 
-    # Useful glob patterns
+    # Column which cannot be left as NA or NaN
+    REQUIRED_COLS = [
+        LEFT_COL,
+        RIGHT_COL,
+        TOP_COL,
+        BOT_COL,
+        CLASS_COL,
+        CLASS_CONF_COL,
+        CALL_UNCERTAINTY_COL
+    ]
+
+    # Dictionary mapping annotator's noisy labels to a constant class name
+    CLASS_LABEL_MAP = {
+        "humpback whale": "hb",
+        "hb whale": "hb",
+        "hb?": "hb",
+        "hhb": "hb",
+        "hb": "hb",
+        "jn": "hb",
+        "sea lion": "sl",
+        "sl": "sl",
+        "rockfish": "rf",
+        "rf": "rf",
+        "killer whale": "kw",
+        "kw": "kw",
+        "?": "?",
+        "mech": "?",
+        "mechanical": "?"
+    }
+
+    # Boxes need to span at least 1ms and 1/100 Hz
+    # If a box is dropped for this reason, it was likely a mistake.
+    BOX_MIN_DURATION = 1e-3 
+    BOX_MIN_FREQ_RANGE = 1e-2
+
+    # Useful glob patterns for finding annotation files and mispellings
     PATTERN = "*.*-*.txt"
     BAD_PATTERNS = ["*.*_*.txt"]
 
@@ -88,7 +130,7 @@ def get_all_annotations_in_directory(directory, check_misnomers=True):
         for bad_pattern in _format.BAD_PATTERNS:
             bad_results.extend(glob.glob(path.join(directory, bad_pattern)))
         if len(bad_results) > 0:
-            raise RuntimeWarning(
+            warnings.warn(
                 "({}) Some files in {} may be incorrectly named: " \
                 "[\n  {}\n]".format(
                     "get_all_annotations_in_directory",
@@ -147,10 +189,20 @@ def levenshteinDistanceDP(token1, token2):
     return distances[len(token1)][len(token2)]
 
 
+def _print_n_rejected(n_rejected, reason):
+    if n_rejected > 0:
+        print("Rejecting {} annotation(s) for {}".format(
+            n_rejected,
+            reason
+        ))
+
+
 def clean_annotations(annotations, verbose=False):
     """
     Cleans a single DataFrame of annotations by identifying invalid annotations
     and separating them from the valid annotations.
+
+    Additionally checks for other formatting issues such as misnamed columns.
 
     Parameters
     annotations : DataFrame
@@ -164,8 +216,103 @@ def clean_annotations(annotations, verbose=False):
     invalid_annotations : DataFrame
         the annotations that failed at least one filter
     """
+    annotations = annotations.copy()
+    original_size = len(annotations)
+    # Check for misnamed columns
+    column_map = {}
+    for req_col in _format.REQUIRED_COLS:
+        # For each required column, find the column with a dist <= 1.
+        matched = False
+        for col in annotations.columns:
+            dist = levenshteinDistanceDP(col, req_col)
+            if dist <= 1:
+                matched = True
+                if dist > 0:
+                    column_map[col] = req_col
+                break
+        
+        if not matched:
+            warnings.warn(
+                "({}) Required Column '{}' does not match any existing " \
+                "columns: [{}]".format(
+                    "clean_annotations",
+                    req_col,
+                    ", ".join(list(annotations.columns))
+                )
+            )
+            # This required column was not found. Stop and reject all.
+            return pd.DataFrame(columns=annotations.columns), annotations
 
-    raise NotImplementedError()
+    if len(column_map) > 0:
+        if verbose:
+            print(
+                "Applying column name corrections: [{}]".format(
+                    ", ".join(
+                        ["'{}':'{}'".format(k,v) for k,v in column_map.items()]
+                    )
+                )
+            )
+        annotations.rename(columns=column_map, inplace=True)
+
+    # As we filter, place slices of invalid annotations here
+    invalid_annots = []
+
+    # ------------------------ Filter by Species label ------------------------
+    classes = annotations[_format.CLASS_COL].str.lower()
+    valid_mask = classes.isin(list(_format.CLASS_LABEL_MAP.keys))
+    if verbose:
+        _print_n_rejected((~valid_mask).sum(), "bad species labels")
+    invalid_annots.append(annotations.loc[~valid_mask])
+    annotations = annotations.loc[valid_mask]
+    annotations[_format.CLASS_COL] = \
+        annotations[_format.CLASS_COL].str.lower().map(_format.CLASS_LABEL_MAP)
+
+    # ------------------- Fill default values where missing -------------------
+    annotations[_format.CLASS_CONF_COL].fillna(5, inplace=True)
+    annotations[_format.CALL_UNCERTAINTY_COL].fillna(0, inplace=True)
+
+    # ----------- Filter by Invalid Confidence / Uncertainty Values -----------
+    valid_mask = (
+        (annotations[_format.CLASS_CONF_COL] >= 0) \
+        & (annotations[_format.CLASS_CONF_COL] <= 5) \
+        & (annotations[_format.CALL_UNCERTAINTY_COL].isin([0,1]))
+    )
+    if verbose:
+        _print_n_rejected(
+            (~valid_mask).sum(),
+            "bad confidence or uncertainty values"
+        )
+    invalid_annots.append(annotations.loc[~valid_mask])
+    annotations = annotations.loc[valid_mask]
+
+    # ---------------------- Filter by any remaining NAs ----------------------
+    valid_mask = ~(annotations[_format.REQUIRED_COLS].isna().any(axis=1))
+    if verbose:
+        _print_n_rejected((~valid_mask).sum(), "missing a required value")
+    invalid_annots.append(annotations.loc[~valid_mask])
+    annotations = annotations.loc[valid_mask]
+
+    # --------------------- Filter by Invalid Box Extents ---------------------
+    valid_mask = (
+        (annotations[_format.RIGHT_COL] - annotations[_format.LEFT_COL] \
+            >= _format.BOX_MIN_DURATION) \
+        & (annotations[_format.TOP_COL] - annotations[_format.BOT_COL] \
+            >= _format.BOX_MIN_FREQ_RANGE)
+    )
+    if verbose:
+        _print_n_rejected((~valid_mask).sum(), "invalid box extents")
+    invalid_annots.append(annotations.loc[~valid_mask])
+    annotations = annotations.loc[valid_mask]
+
+    if verbose:
+        filtered_size = len(annotations)
+        print("{:2%} of annotations passed all filters".format(
+            filtered_size / original_size
+        ))
+
+    invalid_annots = pd.concat(invalid_annots)
+
+    return annotations, invalid_annots
 
 
 def clean_all_annotations_in_directory(
@@ -204,21 +351,26 @@ def clean_all_annotations_in_directory(
         annotations = read_annotations(annot_path, verbose=verbose)
         valid_annotations, invalid_annotations = \
             clean_annotations(annotations, verbose=verbose)
-        valid_annots_path = path.join(
-            output_directory,
-            path.basename(annot_path)
-        )
-        save_annotations(
-            valid_annotations,
-            valid_annots_path,
-            verbose=verbose
-        )
-        invalid_annots_path = path.join(
-            output_directory,
-            "{}_rejected{}".format(*path.splitext(path.basename(annot_path)))
-        )
-        save_annotations(
-            invalid_annotations,
-            invalid_annots_path,
-            verbose=verbose
-        )
+        
+        if len(valid_annotations) > 0:
+            valid_annots_path = path.join(
+                output_directory,
+                path.basename(annot_path)
+            )
+            save_annotations(
+                valid_annotations,
+                valid_annots_path,
+                verbose=verbose
+            )
+        if len(invalid_annotations) > 0:
+            invalid_annots_path = path.join(
+                output_directory,
+                "{}_rejected{}".format(
+                    *path.splitext(path.basename(annot_path))
+                )
+            )
+            save_annotations(
+                invalid_annotations,
+                invalid_annots_path,
+                verbose=verbose
+            )

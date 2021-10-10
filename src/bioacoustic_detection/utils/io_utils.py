@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.io.wavfile as wavfile
+import warnings
 
 def read_wavfile(fpath, normalize=True, dtype=np.float32, verbose=False):
     """
@@ -15,7 +16,7 @@ def read_wavfile(fpath, normalize=True, dtype=np.float32, verbose=False):
     normalize : bool, optional (default: True)
         flag to control whether data is normalized
     dtype : numpy.dtype, optional (default: np.float32)
-        type to cast .wav file's data
+        type to cast .wav file's data (should be a float type)
     verbose : bool, optional (default: False)
         flag to control whether debug information is printed
     
@@ -65,7 +66,12 @@ def read_annotations(fpath, verbose=False):
     annotations = pd.read_csv(fpath, sep="\t")
     if verbose:
         print("Read {} annotations from {}".format(len(annotations), fpath))
-        print("Columns:", ",".join([" {} ({})".format(c, type(c)) for c in annotations.columns]))
+        print(
+            "Columns:",
+            ",".join(
+                [" {} ({})".format(c, type(c)) for c in annotations.columns]
+            )
+        )
     return annotations
 
 
@@ -82,7 +88,7 @@ def save_annotations(annots, fpath, verbose=False):
         flag to control whether debug information is printed
     """
     if not fpath.endswith(".txt"):
-        raise RuntimeWarning(
+        warnings.warn(
             "({}) Saving as '{}' does not match existing " \
                 "annotations.".format("save_annotations", fpath)
         )

@@ -32,5 +32,5 @@ TODO: Describe install instructions here.
   5. `DONE` Allow this codebase to be installed with pip (setuptools).
   6. `DONE` Create a setup script which creates and sets up a python virtual environment (installing requirements and then this package).
   7. Write notebooks in colab which others can use to execute tasks such as running inference or evaluation. (Pulls this source from github, installs all requirements, installs package, calls necessary functions to perform task, returns / visualizes results).
-  8. Add detailed documentation in this README as well as within each of the notebooks which use it.
+  8. Add detailed documentation in this README as well as within each of the notebooks which use it. (Look into expandable items in markdown)
   9. `DONE` Add a .gitignore to ignore all of the `__pycache__` files etc.
