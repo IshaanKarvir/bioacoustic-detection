@@ -16,7 +16,7 @@ TODO: Describe install instructions here.
       - `DONE` IO utility methods
       - `STARTED` Annotation utility methods
       - Visualization utility methods
-      - Data cleaning methods
+      - `STARTED` Data cleaning methods
       - Spectrogram Dataset Generation
       - Inference methods
       - Evaluation methods

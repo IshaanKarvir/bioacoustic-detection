@@ -257,19 +257,25 @@ def clean_annotations(annotations, verbose=False):
     # As we filter, place slices of invalid annotations here
     invalid_annots = []
 
+    # ------------------- Fill default values where missing -------------------
+    annotations[_format.CLASS_CONF_COL].fillna(5, inplace=True)
+    annotations[_format.CALL_UNCERTAINTY_COL].fillna(0, inplace=True)
+    # If they had NaNs, then the columns would have been upcast to float64, so
+    # cast them back to int64
+    annotations = annotations.astype({
+        _format.CLASS_CONF_COL: "int64",
+        _format.CALL_UNCERTAINTY_COL: "int64"
+    })
+
     # ------------------------ Filter by Species label ------------------------
     classes = annotations[_format.CLASS_COL].str.lower()
-    valid_mask = classes.isin(list(_format.CLASS_LABEL_MAP.keys))
+    valid_mask = classes.isin(list(_format.CLASS_LABEL_MAP.keys()))
     if verbose:
         _print_n_rejected((~valid_mask).sum(), "bad species labels")
     invalid_annots.append(annotations.loc[~valid_mask])
     annotations = annotations.loc[valid_mask]
     annotations[_format.CLASS_COL] = \
         annotations[_format.CLASS_COL].str.lower().map(_format.CLASS_LABEL_MAP)
-
-    # ------------------- Fill default values where missing -------------------
-    annotations[_format.CLASS_CONF_COL].fillna(5, inplace=True)
-    annotations[_format.CALL_UNCERTAINTY_COL].fillna(0, inplace=True)
 
     # ----------- Filter by Invalid Confidence / Uncertainty Values -----------
     valid_mask = (

@@ -1,0 +1,16 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Species	Species Confidence	Call Uncertainty
+1	Spectrogram 1	1	16.9	17.8	59.4	246.9	hb	2	0
+2	Spectrogram 1	1	71.9	73.3	32	612.6	hb	5	0
+3	Spectrogram 1	1	73.4	74.5	54.9	608.1	hb	5	0
+4	Spectrogram 1	1	333.0	338.8	573.8	690.3	hb	1	1
+5	Spectrogram 1	1	353.1	353.9	898.4	948.7	rf	5	0
+6	Spectrogram 1	1	355.1	356.3	852.6	914.4	hb	5	0
+7	Spectrogram 1	1	1753.5	1754.8	338.3	480	hb	4	0
+8	Spectrogram 1	1	1826.5	1830.1	93.5	324.9	hb	5	0
+9	Spectrogram 1	1	1867.6	1868.6	31.1	296.3	hb	5	0
+10	Spectrogram 1	1	2218.8	2219.7	20.7	967.0	kw	5	0
+11	Spectrogram 1	1	2233.0	2234.4	15.5	1019.0	hb	5	0
+12	Spectrogram 1	1	2249.2	2252.4	314.5	571.9	hb	4	0
+13	Spectrogram 1	1	2372.7	2374.2	31.1	267.7	hb	5	0
+14	Spectrogram 1	1	2374.4	2375.7	23.3	244.3	sl	5	0
+15	Spectrogram 1	1	2633.5	2635.3	18.1	270.3	sl	5	0
