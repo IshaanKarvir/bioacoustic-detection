@@ -3,6 +3,13 @@
 A pre-trained model and API for detecting humpback whale vocalizations in
 hydrophone recordings.
 
+## Install
+TODO: Describe install instructions here.
+  1. Install python3 and python3-venv
+  2. Clone the repo and `cd bioacoustic_detection`
+  3. Run `./setup.sh` (Describe what this does)
+  4. Run `source env/bin/activate`
+
 ## TODO:
   1. `DONE` Add a very permissive license.
   2. `STARTED` Translate Jupyter Notebooks into python scripts
