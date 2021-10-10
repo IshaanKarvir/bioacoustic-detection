@@ -273,7 +273,7 @@ def clean_annotations(annotations, verbose=False):
 
     # ----------- Filter by Invalid Confidence / Uncertainty Values -----------
     valid_mask = (
-        (annotations[_format.CLASS_CONF_COL] >= 0) \
+        (annotations[_format.CLASS_CONF_COL] >= 1) \
         & (annotations[_format.CLASS_CONF_COL] <= 5) \
         & (annotations[_format.CALL_UNCERTAINTY_COL].isin([0,1]))
     )
