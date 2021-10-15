@@ -1,0 +1,2 @@
+Selection	View	Channel	Begin Time (s)	End Time (s)	Low Freq (Hz)	High Freq (Hz)	Species	Species Confidence	Call Uncertainty
+5	Spectrogram 1	1	353.1	353.9	898.4	948.7	rf	5	0
