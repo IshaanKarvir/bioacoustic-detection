@@ -11,7 +11,7 @@ The bioacoustic-detection package is organized with all of the source code in `s
       - `io.py` contains code for reading and writing annotation and wav files.
       - `annot.py` contains code for cleaning raw annotations and other annotation-related utilities
       - `wav.py` contains code for pre-processing wav files, including decimation
-      - TODO`vis.py` contains code for constructing and saving visualizations
+      - `vis.py` contains code for constructing and saving visualizations
   - (TODO) `spectrogram_dataset_generator.py` contains the code for generating spectrogram datasets from annotations and recordings.
   - (TODO) `train.py` contains the code for training a detection model from a spectrogram dataset.
   - (TODO) `run_inference.py` contains the code for running inference on a recording.
@@ -33,9 +33,9 @@ The following scripts provide helpful interfaces for using the bioacoustic-detec
   1. `DONE` Add a very permissive license.
   2. `STARTED` Translate Jupyter Notebooks into python scripts
       - `DONE` IO utility methods
-      - `STARTED` Annotation utility methods
-      - Visualization utility methods
+      - `DONE` Annotation utility methods
       - `DONE` Data cleaning methods
+      - `STARTED` Visualization utility methods
       - Spectrogram Dataset Generation
       - Training methods (adapted from TF's Object Detection)
       - Inference methods
@@ -43,6 +43,7 @@ The following scripts provide helpful interfaces for using the bioacoustic-detec
   3. Create unit tests for python scripts
       - IO utility methods
       - `DONE` Annotation utility methods
+      - Wav utility methods (PCEN)
       - Visualization utility methods
       - `DONE` Data cleaning methods
       - Spectrogram Dataset Generation
