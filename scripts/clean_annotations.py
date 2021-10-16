@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
+
 from argparse import ArgumentParser
-from bioacoustic_detection.utils.annot_utils import (
+from bioacoustic_detection.utils.annot import (
     clean_all_annotations_in_directory
 )
 def get_args():

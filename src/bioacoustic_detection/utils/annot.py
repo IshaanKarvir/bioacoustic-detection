@@ -1,4 +1,4 @@
-from .io_utils import read_annotations, save_annotations
+from .io import read_annotations, save_annotations
 import warnings
 import glob
 import os
@@ -55,7 +55,7 @@ class AnnotationFormat:
     }
 
     # Boxes need to span at least 1ms and 1/100 Hz
-    # If a box is dropped for this reason, it was likely a mistake.
+    # If a box is dropped for this reason, it was likely created by mistake.
     BOX_MIN_DURATION = 1e-3 
     BOX_MIN_FREQ_RANGE = 1e-2
 

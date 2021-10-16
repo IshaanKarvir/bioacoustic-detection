@@ -1,11 +1,11 @@
 import pytest
 from .helpers import assert_frame_equal_no_index
 
-from bioacoustic_detection.utils.io_utils import (
+from bioacoustic_detection.utils.io import (
     read_annotations
 )
 
-from bioacoustic_detection.utils.annot_utils import (
+from bioacoustic_detection.utils.annot import (
     levenshteinDistanceDP,
     clean_annotations,
     get_all_classes
