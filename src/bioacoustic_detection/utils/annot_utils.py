@@ -1,6 +1,7 @@
 from .io_utils import read_annotations, save_annotations
 import warnings
 import glob
+import os
 import os.path as path
 import numpy as np
 import pandas as pd
@@ -222,16 +223,28 @@ def clean_annotations(annotations, verbose=False):
     column_map = {}
     for req_col in _format.REQUIRED_COLS:
         # For each required column, find the column with a dist <= 1.
-        matched = False
+        matches = []
         for col in annotations.columns:
             dist = levenshteinDistanceDP(col, req_col)
             if dist <= 1:
-                matched = True
+                matches.append(col)
                 if dist > 0:
                     column_map[col] = req_col
-                break
         
-        if not matched:
+        if len(matches) > 1:
+            warnings.warn(
+                "({}) Required Column '{}' matches multiple " \
+                "columns: [{}]".format(
+                    "clean_annotations",
+                    req_col,
+                    ", ".join(matches)
+                )
+            )
+            # This required column is ambiguous. Stop and reject all.
+            # TODO: Write logic to combine ambiguous columns automatically
+            return pd.DataFrame(columns=annotations.columns), annotations
+        
+        if len(matches) == 0:
             warnings.warn(
                 "({}) Required Column '{}' does not match any existing " \
                 "columns: [{}]".format(
@@ -258,8 +271,11 @@ def clean_annotations(annotations, verbose=False):
     invalid_annots = []
 
     # ------------------- Fill default values where missing -------------------
-    annotations[_format.CLASS_CONF_COL].fillna(5, inplace=True)
-    annotations[_format.CALL_UNCERTAINTY_COL].fillna(0, inplace=True)
+    default_values = {
+        _format.CLASS_CONF_COL: 5,
+        _format.CALL_UNCERTAINTY_COL: 0
+    }
+    annotations.fillna(default_values, inplace=True)
     # If they had NaNs, then the columns would have been upcast to float64, so
     # cast them back to int64
     annotations = annotations.astype({
@@ -347,6 +363,7 @@ def clean_all_annotations_in_directory(
 
     if output_directory is None:
         output_directory = input_directory
+    os.makedirs(output_directory, exist_ok=True)
 
     annotation_paths = get_all_annotations_in_directory(
         input_directory,
@@ -354,7 +371,7 @@ def clean_all_annotations_in_directory(
     )
 
     for annot_path in annotation_paths:
-        annotations = read_annotations(annot_path, verbose=verbose)
+        annotations = read_annotations(annot_path)
         valid_annotations, invalid_annotations = \
             clean_annotations(annotations, verbose=verbose)
         
