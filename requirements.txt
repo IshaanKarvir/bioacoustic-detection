@@ -1,11 +1,11 @@
-librosa==0.8.1
-matplotlib==3.4.3
-numpy==1.19.2
-pandas==1.3.3
-Pillow==8.3.2
+librosa  # tested with 0.8.1
+matplotlib  # tested with 3.4.3
+numpy  # tested with 1.19.2
+pandas  # tested with 1.3.3
+Pillow  # tested with 8.3.2
 protobuf==3.18.1
-pytest==6.2.5
-scipy==1.7.1
+pytest  # tested with 6.2.5
+scipy  # tested with 1.7.1
 six==1.15.0
 tensorflow==2.6.0
-tqdm==4.62.3
+tqdm  # tested with 4.62.3
