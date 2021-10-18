@@ -3,6 +3,8 @@
 A pre-trained model and API for detecting humpback whale vocalizations in
 hydrophone recordings.
 
+(TODO: Add high-level description of the task and how this codebase accomplishes it. Link to relevant papers in object detection / nueral networks. Provide an example workflow from input files to detections and performance evaluations.)
+
 ## Organization
 
 The bioacoustic-detection package is organized with all of the source code in `src/bioacoustic_detection`, executable scripts in `scripts/`, and tests in `tests/`. Nearly all of the interesting code will be contained in the package's source code while the executable scripts are only meant to provide a convenient command line interface (CLI) for using the package. The bioacoustic-detection package itself is composed of:
