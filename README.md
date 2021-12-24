@@ -14,16 +14,17 @@ The bioacoustic-detection package is organized with all of the source code in `s
       - `annot.py` contains code for cleaning raw annotations and other annotation-related utilities
       - `wav.py` contains code for pre-processing wav files, including decimation
       - `vis.py` contains code for constructing and saving visualizations
-  - (TODO) `spectrogram_dataset_generator.py` contains the code for generating spectrogram datasets from annotations and recordings.
+  - `spectrogram_dataset_generator.py` contains the code for generating spectrogram datasets from annotations and recordings.
   - (TODO) `train.py` contains the code for training a detection model from a spectrogram dataset.
   - (TODO) `run_inference.py` contains the code for running inference on a recording.
   - (TODO) `evaluate.py` contains code for evaluating a trained model on a spectrogram dataset with annotations.
 
 ## Install
   1. Install python3 and python3-venv
-  2. Clone the repo with `git clone git@github.com:jackson-waschura/bioacoustic-detection.git` and change the current directory to it with `cd bioacoustic-detection`.
-  3. Run the setup script with `./setup.sh`. This will create a python3 virtual environment (venv) in the directory "env/" and install the necessary prerequisite packages there along with the bioacoustic-detection package.
-  4. Run `source env/bin/activate` to enter the python venv. When you are done using the bioacoustic-detection package, you can exit the python venv by running `deactivate`. (You must do this every time you want to use the bioacoustic-detection package unless you prefer to install the package directly onto your local machine.)
+  2. Clone the repo with `git clone --recursive git@github.com:jackson-waschura/bioacoustic-detection.git` (the `--recursive` flag is important so that you also retrieve the TF `models` submodule which is used to train object detection models)
+  3. Change the current directory with `cd bioacoustic-detection`.
+  4. Run the setup script with `./setup.sh`. This will create a python3 virtual environment (venv) in the directory "env/" and install the prerequisite packages there along with the bioacoustic-detection package.
+  5. Run `source env/bin/activate` to enter the python venv. When you are done using the bioacoustic-detection package, you can exit the python venv by running `deactivate`. (You must do this every time you want to use the bioacoustic-detection package unless you prefer to install the package directly onto your local machine.)
 
 ## Scripts
 
