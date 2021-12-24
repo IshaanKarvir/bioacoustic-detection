@@ -54,7 +54,7 @@ def read_annotations(fpath, verbose=False):
     Reads an annotation file and returns the annotations as a pandas DataFrame.
 
     This function does not ensure columns are returned in any particular order
-    or having any particular types.
+    or have any particular types.
 
     Parameters
     fpath : str
