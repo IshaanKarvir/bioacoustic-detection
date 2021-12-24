@@ -30,7 +30,7 @@ The bioacoustic-detection package is organized with all of the source code in `s
 
 The following scripts provide helpful interfaces for using the bioacoustic-detection package from the terminal:
   - `clean_annotations.py [-h] [-i IN_DIR] [-o OUT_DIR] [-q]`
-  - (TODO) `generate_dataset.py ...`
+  - `generate_spectrogram_dataset.py [-h] --splits SPLITS -o OUT_DIR [optional parameters...]`
 
 ## TODO:
   1. `DONE` Add a very permissive license.
