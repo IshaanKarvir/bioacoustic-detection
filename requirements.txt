@@ -7,5 +7,6 @@ protobuf==3.18.1
 pytest  # tested with 6.2.5
 scipy  # tested with 1.7.1
 six==1.15.0
-tensorflow==2.6.0
+tensorflow>=2.6.0 # tested with 2.6.0
+contextlib2
 tqdm  # tested with 4.62.3
