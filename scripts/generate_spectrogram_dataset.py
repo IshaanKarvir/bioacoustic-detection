@@ -147,7 +147,7 @@ def main(args):
         min_box_percent=args.min_box_percent,
         n_train_shards=args.n_train_shards,
         n_eval_shards=args.n_eval_shards,
-        classes=args.classes,
+        allowed_classes=args.classes,
         verbose=verbose
     )
     if verbose:

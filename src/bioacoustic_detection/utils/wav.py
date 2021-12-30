@@ -134,6 +134,7 @@ def PCEN(spec, M_return_timestep, init_M=None, epsilon=1e-6, s=0.001, alpha=0.80
     assert alpha > 0.0 and alpha < 1.0, "alpha must be between 0.0 and 1.0"
     
     output = np.zeros_like(spec)
+    out_M = None
     if init_M is None:
         M = np.zeros(shape=(output.shape[0]))
     else:
@@ -144,4 +145,6 @@ def PCEN(spec, M_return_timestep, init_M=None, epsilon=1e-6, s=0.001, alpha=0.80
         output[:,t] = ((spec[:,t] / ((M + epsilon) ** alpha)) ** r) - (delta ** r)
         if t == M_return_timestep:
             out_M = M
+    if out_M is None:
+        out_M = M
     return output, out_M

@@ -86,7 +86,7 @@ def get_all_classes(annotation_paths, verbose=False):
         classes.update(list(read_annotations(annot_fname)[_format.CLASS_COL].unique()))
     classes = sorted([s for s in list(classes)])
     if verbose:
-        print("Classes: ", classes)
+        print("Classes found: ", classes)
     return classes
 
 

@@ -1,9 +1,17 @@
 # Bioacoustic Detection
 
-A pre-trained model and API for detecting humpback whale vocalizations in
-hydrophone recordings.
+(A pre-trained model and API for detecting humpback whale vocalizations in
+hydrophone recordings.)
 
-(TODO: Add high-level description of the task and how this codebase accomplishes it. Link to relevant papers in object detection / nueral networks. Provide an example workflow from input files to detections and performance evaluations.)
+Detecting and localizing biological sounds from hydrophone recordings is useful to remotely study the social behavior of marine mammals. Manually listening through hydrophone recordings to label the occurence of each vocalization is an incredibly time consuming process and is not feasible for annotating hundreds to thousands of hours of audio data. In order to reduce the amount of time that researchers must spend simply locating the signals which they wish to study, this repository aims to automatically detect and localize vocalizations in hydrophone recordings. To that end, this repository trains a convolutional neural network to detect humpback whale vocalizations in spectrograms (a visual representation of audio). Using CNNs to detect objects in images is a well-studied problem and therefor by using spectrograms as input to our model, we can benefit from the numerous successful approaches published in the object detection literature as well as open-source libraries which support this task.
+
+First, we'll review object detection. The [PASCAL VOC](http://host.robots.ox.ac.uk/pascal/VOC/) and [MSCOCO](https://arxiv.org/abs/1405.0312) datasets are both cannonical examples of the object detection task: given an image as input, produce a set of bounding boxes and class labels which identify and localize each object in the image. In the context of our task: given a spectrogram of an audio recording, produce a set of bounding boxes and class labels which identify the species of each vocalization and localize each in both time and frequency.
+
+(TODO: include example spectrogram and labels)
+
+(TODO: more specifically, which CNN architecture does this repo currently use and how is it trained?)
+
+(TODO: Provide an example workflow from input files to detections and performance evaluations.)
 
 ## Organization
 
@@ -15,7 +23,6 @@ The bioacoustic-detection package is organized with all of the source code in `s
       - `wav.py` contains code for pre-processing wav files, including decimation
       - `vis.py` contains code for constructing and saving visualizations
   - `spectrogram_dataset_generator.py` contains the code for generating spectrogram datasets from annotations and recordings.
-  - (TODO) `train.py` contains the code for training a detection model from a spectrogram dataset.
   - (TODO) `run_inference.py` contains the code for running inference on a recording.
   - (TODO) `evaluate.py` contains code for evaluating a trained model on a spectrogram dataset with annotations.
 
@@ -39,7 +46,7 @@ The following scripts provide helpful interfaces for using the bioacoustic-detec
       - `DONE` Annotation utility methods
       - `DONE` Data cleaning methods
       - `STARTED` Visualization utility methods
-      - Spectrogram Dataset Generation
+      - `STARTED` Spectrogram Dataset Generation
       - Training methods (adapted from TF's Object Detection)
       - Inference methods
       - Evaluation methods

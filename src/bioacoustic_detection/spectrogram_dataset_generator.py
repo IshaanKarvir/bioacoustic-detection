@@ -81,8 +81,7 @@ def get_minmax_bounds(wav_filenames,
                                                       n_mels=n_mels,
                                                       fmax=freq_max,
                                                       center=False)
-            mel_spec = librosa.power_to_db(mel_spec)
-            mel_spec, M_init = PCEN(mel_spec, step // hop_len, init_val=M_init)
+            mel_spec, M_init = PCEN(mel_spec, step // hop_len, init_M=M_init)
             temp_min = mel_spec.min()
             temp_max = mel_spec.max()
             if min_val is None or temp_min < min_val:
@@ -168,8 +167,7 @@ def process_file(wav_filename,
                                                   n_mels=n_mels,
                                                   fmax=freq_max,
                                                   center=False)
-        mel_spec = librosa.power_to_db(mel_spec)
-        mel_spec, next_M_init = PCEN(mel_spec, step // hop_len, init_val=M_init)
+        mel_spec, next_M_init = PCEN(mel_spec, step // hop_len, init_M=M_init)
         mel_spec = np.clip(
             (mel_spec - min_bound) / (max_bound - min_bound) * 255,
             a_min=0,
@@ -247,23 +245,19 @@ def process_file(wav_filename,
     M_init = None
     for ind, start_i in enumerate(start_vals[:-1]):
         spec_name = "{}-{}.png".format(file_id, ind)
-        annot_name = "{}-{}-labels.txt".format(file_id, ind)
         ex, M_init = extract_chunk(
             start_i,
             start_i+chunk_size,
             spec_name,
-            annot_name,
             M_init=M_init
         )
         examples.append(ex)
     if not drop_last_chunk:
         spec_name = "{}-{}.png".format(file_id, len(start_vals)-1)
-        annot_name = "{}-{}-labels.txt".format(file_id, len(start_vals)-1)
         ex, _ = extract_chunk(
             start_vals[-1],
             len(data),
             spec_name,
-            annot_name,
             M_init=M_init
         )
         examples.append(ex)
@@ -330,7 +324,14 @@ def generate_dataset(
         rev_class_map[classes[i]] = i+1
     
     # Computing scaling parameters based on TRAIN set only.
-    min_bound, max_bound = get_minmax_bounds([p[0] for p in train_dataset])
+    min_bound, max_bound = get_minmax_bounds(
+        [p[0] for p in train_dataset],
+        window_size_sec,
+        hop_len_sec,
+        n_mels,
+        freq_max,
+        train_chunk_len_sec
+    )
     if verbose:
         print("Min and Max db: {}, {}".format(min_bound, max_bound))
 
