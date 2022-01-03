@@ -1,0 +1,23 @@
+{
+    "train": [
+      ["data/671658014.180929033558_norm_8k-resample.wav", "data/671658014.180929033558-JW.txt"],
+      ["data/671658014.180929003601_norm_8k-resample.wav", "data/671658014.180929003601-MS.txt"],
+      ["data/671658014.180928153609_norm_8k-resample.wav", "data/671658014.180928153609-JW.txt"],
+      ["data/671658014.180929123551_norm_8k-resample.wav", "data/671658014.180929123551-AW.txt"],
+      ["data/671658014.180930003542_norm_8k-resample.wav", "data/671658014.180930003542-AW.txt"],
+      ["data/671658014.180930063538_norm_8k-resample.wav", "data/671658014.180930063538-MS.txt"],
+      ["data/671658014.180930033540_norm_8k-resample.wav", "data/671658014.180930033540-AW.txt"],
+      ["data/671658014.180930123535_norm_8k-resample.wav", "data/671658014.180930123535-MS.txt"],
+      ["data/671658014.180929213545_norm_8k-resample.wav", "data/671658014.180929213545-AW.txt"],
+      ["data/671658014.180930183532_norm_8k-resample.wav", "data/671658014.180930183532-MS.txt"],
+      ["data/671658014.180929153549_norm_8k-resample.wav", "data/671658014.180929153549-MS.txt"]
+    ],
+    "eval": [
+      ["data/671658014.180928183606_norm_8k-resample.wav", "data/671658014.180928183606-AW.txt"],
+      ["data/671658014.180928213604_norm_8k-resample.wav", "data/671658014.180928213604-MS.txt"],
+      ["data/671658014.180929063556_norm_8k-resample.wav", "data/671658014.180929063556-MS.txt"],
+      ["data/671658014.180929093553_norm_8k-resample.wav", "data/671658014.180929093553-MS.txt"],
+      ["data/671658014.180929183547_norm_8k-resample.wav", "data/671658014.180929183547-MS.txt"],
+      ["data/671658014.180930153534_norm_8k-resample.wav", "data/671658014.180930153534-AW.txt"]
+    ]
+}
