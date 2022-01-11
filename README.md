@@ -39,6 +39,25 @@ The following scripts provide helpful interfaces for using the bioacoustic-detec
   - `clean_annotations.py [-h] [-i IN_DIR] [-o OUT_DIR] [-q]`
   - `generate_spectrogram_dataset.py [-h] --splits SPLITS -o OUT_DIR [optional parameters...]`
 
+## Training a Model
+
+You can train a new model using the Tensorflow Object Detection API. First, you'll need to create a `.config` file which defines the model's architecture as well as its training and evaluation procedures. See the example in `data/example_model.config` for a specific example (and check out the tensorflow Object Detection documentation for more information). Notice that your training dataset is also specified in the `.config` file. To run training (on a machine with a GPU available), execute the following command:
+
+```
+python3 models/research/object_detection/model_main_tf2.py \
+    --pipeline_config_path="data/example_model.config" \
+    --model_dir="experiments/example_model" \
+    --alsologtostderr
+```
+
+This uses the example model and outputs the results into the directory `experiments/example_model`. You can then view the progress of training with tensorboard:
+
+```
+tensorboard --logdir experiments/example_model
+```
+
+This hosts a webapp on your local machine that displays training info. You can connect to it (usually) at `localhost:6006`.
+
 ## TODO:
   1. `DONE` Add a very permissive license.
   2. `STARTED` Translate Jupyter Notebooks into python scripts

@@ -404,4 +404,3 @@ def generate_dataset(
 # TODO(jwaschura): confirm new script functions as expected and generate new dataset with up-to-date files.
 # TODO(jwaschura): add instructions for installing tensorflow object detection.
 # TODO(jwaschura): Write documentation for the methods in this file.
-# TODO(jwaschura): add contextlib to requirements
